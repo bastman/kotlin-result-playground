@@ -12,10 +12,26 @@ plugins {
     application
 }
 
+configure<JavaPluginConvention> {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            apiVersion = "1.3"
+            languageVersion = "1.3"
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+        }
+    }
+}
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -24,6 +40,9 @@ dependencies {
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    val ktResultVersion = "1.1.6" // "1.1.7"
+    compile("com.michael-bull.kotlin-result:kotlin-result:$ktResultVersion")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -34,5 +53,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "kotlin.result.playground.AppKt"
+    mainClassName = "example.playground.AppKt"
 }
