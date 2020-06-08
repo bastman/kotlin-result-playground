@@ -4,35 +4,37 @@
 package example.playground
 
 import com.github.michaelbull.result.*
+import util.ktresult.runCatchingKT
 
-typealias KtResult<V,E> = com.github.michaelbull.result.Result<out V, out E>
 
-private data class MyErr(val ex:Throwable)
+private data class MyErr(val ex: Throwable)
 
 class App {
-    val items:MutableList<Item> = mutableListOf()
+    val items: MutableList<Item> = mutableListOf()
 
 
     fun run() {
 
-        val item = runCatching { items.get(123) }
+        val item = runCatchingKT { items.get(123) }
                 .mapError { MyErr(it) }
                 .onFailure { println("failed: $it") }
                 .onSuccess { println("success: $it") }
                 .andThen {
-                    runCatching { items.get(123) }
+                    runCatchingKT { items.get(123) }
                             .mapError { MyErr(it) }
                 }
-                //.and { runCatching { items.get(123) } }
+                .getOr {
+                    throw RuntimeException("foo")
+                }
+
 
         //println(item)
     }
 
 
-
 }
 
-data class Item(val id:Int)
+data class Item(val id: Int)
 
 fun main(args: Array<String>) {
     App().run()
