@@ -1,4 +1,4 @@
-# kotloin-result-playground
+# kotlin-result-playground
 investigate kotlin-result monad
 
 see:
